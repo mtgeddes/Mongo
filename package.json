@@ -1,0 +1,28 @@
+{
+  "name": "mongo",
+  "version": "1.0.0",
+  "description": "A web scraper app that utilizes MongoDB.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtgeddes/Mongo.git"
+  },
+  "author": "Matt Geddes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mtgeddes/Mongo/issues"
+  },
+  "homepage": "https://github.com/mtgeddes/Mongo#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.2.4",
+    "request": "^2.87.0"
+  }
+}
