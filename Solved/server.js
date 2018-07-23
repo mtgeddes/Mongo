@@ -25,12 +25,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"))
 
-let MONGODB_URI = process.env.MONGODB_URI || "mongodb://admin:admin1@ds143451.mlab.com:43451/mongo-scraper";
-mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI);
-
-
-
+let MONGODB_URI = process.env.MONGODB_URI || "mongodb://admin:admin1@ds243501.mlab.com:43501/heroku_c4xx729h"
+mongoose.Promise = Promise
+mongoose.connect(MONGODB_URI)
 
 // Routes
 
