@@ -59,7 +59,7 @@ app.get("/scrape", function(req, res) {
           summary: $(this).find("div.elastic-container").find("div.post-body").find("p").text().trim()
         })
         
-
+        console.log(newArticle)
         if (newArticle.title) {
           console.log("new article TITLE ////////////////////  " + newArticle.title)
           if (!savedTitles.includes(newArticle.title)) {
@@ -183,3 +183,6 @@ app.post("/save/:id", function(req, res) {
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
+
+
+
