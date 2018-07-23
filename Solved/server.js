@@ -1,5 +1,4 @@
 // Dependencies
-
 const express = require("express")
 const bodyParser = require("body-parser")
 const logger = require("morgan")
@@ -26,8 +25,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"))
 
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/week18Populater")
+let MONGODB_URI = process.env.MONGODB_URI || "mongodb://admin:admin1@ds143451.mlab.com:43451/mongo-scraper";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
+
 
 
 

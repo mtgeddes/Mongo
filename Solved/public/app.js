@@ -55,7 +55,7 @@ function getLoadedArticles() {
       + data[i].link + "<br /> <br /> Summary: " 
       + data[i].summary + "<br /><br /> <br />  </p> <button id='save-article' data-saved='" 
       + data[i].saved + "' data-id='"
-      + data[i]._id + "'>Delete Article </button>");
+      + data[i]._id + "'>Save Article </button>");
     }
   });
 }
