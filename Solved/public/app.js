@@ -7,6 +7,7 @@ $('#scrape').on('click', function() {
     method: "GET",
     url: "/scrape"
   }).then(function() {
+    $('#articles').html('')
     getArticles()
   }) 
 })
@@ -34,9 +35,34 @@ $('#saved-articles').on('click', function() {
     getSavedArticles()
 })
 
+$('#loaded-articles').on('click', function() {
+  getLoadedArticles()
+})
+
+function getLoadedArticles() {
+  $('#articles').html('')
+ 
+  $.getJSON("/loadedarticles", function(data) {
+    
+    // For each one
+    for (let i = 0; i < data.length; i++) {
+      // Display the apropos information on the page
+      $("#articles").append("<p data-id='" 
+      + data[i]._id + "'>" 
+      + data[i].title + "<br />  <br /> " 
+      + data[i].link + "<br /> <br /> Summary: " 
+      + data[i].summary + "<br /><br /> <br />  </p> <button id='save-article' data-id='" 
+      + data[i]._id + "'>Save Article </button>");
+    }
+  });
+}
+
+
 function getSavedArticles() {
+  $('#articles').html('')
+ 
   $.getJSON("/savedarticles", function(data) {
-    console.log("client side /articles hit")
+    
     // For each one
     for (let i = 0; i < data.length; i++) {
       // Display the apropos information on the page
