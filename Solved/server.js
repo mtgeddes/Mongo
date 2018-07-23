@@ -36,43 +36,39 @@ mongoose.connect("mongodb://localhost/week18Populater")
 // Scrapes the webpage and stores the data in a document of the articles collection.
 app.get("/scrape", function(req, res) {
 
-  // Grabs the body of the html page
-  axios.get("https://electrek.co/guides/tesla/").then(function(response) {
+  db.Article.find({})
+  .then((scrapedArticles) => {
 
-    // Stored in a Cheerio variable
-    let $ = cheerio.load(response.data)
-
-    // Grabs every article
-    $("article").each(function(i, element) {
-
-      // Saves an empty result object
-      let result = {}
-
-      // Pulls the title, link, and summary from the page and stores in an object
-      result.title = $(this)
-        .find('h1.post-title')
-        .find('a')
-        .text()
-        .trim()
-      result.link = $(this)
-        .find("a")
-        .attr("href");
-      result.summary = $(this)
-        .find("div.elastic-container")
-        .find("div.post-body")
-        .find("p")
-        .text()
-        .trim()
-      console.log(result)
+    let savedTitles = scrapedArticles.map(article => article.title);
 
 
-    
-      // Checks for blank tags and doesn't pull those
-      if (result.title == '') {
-        console.log('no article found')
-      } 
-      else {
-        db.Article.create(result)
+    // Grabs the body of the html page
+    axios.get("https://electrek.co/guides/tesla/").then(function(response) {
+
+      // Stored in a Cheerio variable
+      let $ = cheerio.load(response.data)
+      // Saves an empty result array
+      let newResults = []
+
+      // Grabs every article
+      $("article").each(function(i, element) {
+        // Pulls the title, link, and summary from the page and stores in an object
+        let newArticle = new db.Article({
+          title: $(this).find('h1.post-title').find('a').text().trim(),
+          link: $(this).find("a").attr("href"),
+          summary: $(this).find("div.elastic-container").find("div.post-body").find("p").text().trim()
+        })
+        
+
+        if (newArticle.title) {
+          console.log("new article TITLE ////////////////////  " + newArticle.title)
+          if (!savedTitles.includes(newArticle.title)) {
+            newResults.push(newArticle);
+          }
+        }
+    })
+
+        db.Article.create(newResults)
         .then(function(x) {
           // View the added result in the console
           console.log(x)
@@ -81,15 +77,13 @@ app.get("/scrape", function(req, res) {
           // If an error occurred, send it to the client
           return res.json(err)
         })
-      }
 
-    })
+      // Informs client side of succesful scrape
+      res.send("Scrape Complete")
+      })
 
-    // Informs client side of succesful scrape
-    res.send("Scrape Complete")
   })
 })
-
 
 
 // Grabs all articles from the database
