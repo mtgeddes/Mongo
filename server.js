@@ -37,8 +37,7 @@ app.get("/scrape", function(req, res) {
   db.Article.find({})
   .then((scrapedArticles) => {
 
-    let savedTitles = scrapedArticles.map(article => article.title);
-
+    let savedTitles = scrapedArticles.map(article => article.title)
 
     // Grabs the body of the html page
     axios.get("https://electrek.co/guides/tesla/").then(function(response) {
@@ -61,7 +60,7 @@ app.get("/scrape", function(req, res) {
         if (newArticle.title) {
           console.log("new article TITLE ////////////////////  " + newArticle.title)
           if (!savedTitles.includes(newArticle.title)) {
-            newResults.push(newArticle);
+            newResults.push(newArticle)
           }
         }
     })
@@ -72,7 +71,6 @@ app.get("/scrape", function(req, res) {
           console.log(x)
         })
         .catch(function(err) {
-          // If an error occurred, send it to the client
           return res.json(err)
         })
 
@@ -90,14 +88,13 @@ app.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
   db.Article.find({saved: false})
     .then(function(x) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.json(x);
+      // Sends articles back to client
+      res.json(x)
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 // Grabs all of the saved articles from the database
 app.get("/savedarticles", function(req, res) {
@@ -105,14 +102,13 @@ app.get("/savedarticles", function(req, res) {
   // Grab every document in the Articles collection
   db.Article.find({saved: true})
     .then(function(x) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.json(x);
+      // Sends articles back to client
+      res.json(x)
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 // Grabs all of the saved articles from the database
 app.get("/loadedarticles", function(req, res) {
@@ -120,13 +116,12 @@ app.get("/loadedarticles", function(req, res) {
   db.Article.find({saved: false})
     .then(function(x) {
       // If we were able to successfully find Articles, send them back to the client
-      res.json(x);
+      res.json(x)
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 
 // Grabs a specific articles from the db and updates the note property on it
@@ -136,32 +131,27 @@ app.get("/articles/:id", function(req, res) {
     // add the note(s) to it
     .populate("note")
     .then(function(x) {
-      // Success is sent to client
-      res.json(x);
+      res.json(x)
     })
     .catch(function(err) {
-      // Error is sent to client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
     .then(function(dbNote) {
-      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true })
     })
     .then(function(x) {
-      // Success is sent to client
-      res.json(x);
+      res.json(x)
     })
     .catch(function(err) {
-      // Error is sent to client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 
 // Route for updating an article to saved / unsaved
@@ -172,15 +162,14 @@ app.post("/save/:id", function(req, res) {
       res.json(x)
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
+      res.json(err)
+    })
+})
 
 // Start the server
 app.listen(PORT, function() {
-  console.log("App running on port " + PORT + "!");
-});
+  console.log("App running on port " + PORT + "!")
+})
 
 
 
