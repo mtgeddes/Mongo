@@ -1,0 +1,23 @@
+
+
+
+    {{!-- <button id='scrape'>Scrape!</button>
+    <button id='saved-articles'>Saved Articles</button>
+    <button id='loaded-articles'>Loaded Articles</button>
+    <div id="wrapper">
+      <h1>Article Scraper</h1>
+
+      <div id="articles"></div>
+      <div id="notes"></div>
+    </div>
+ --}}
+
+
+<ul>
+  {{#each data}}
+    <a href="{{this.link}}"><h3>{{this.title}}</h3></a>
+    <p data-id="{{this._id}}">
+    {{this.summary}}</p>
+    <button id='save-article' data-saved='{{this.saved}}' data-id='{{this._id}}'>Save Article</button>
+  {{/each}}
+</ul>

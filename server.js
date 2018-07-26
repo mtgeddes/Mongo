@@ -3,6 +3,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const logger = require("morgan")
 const mongoose = require("mongoose")
+const exphbs = require('express-handlebars')
 
 // Scraping tools
 const axios = require("axios")
@@ -29,7 +30,11 @@ let MONGODB_URI = process.env.MONGODB_URI || "mongodb://admin:admin1@ds243501.ml
 mongoose.Promise = Promise
 mongoose.connect(MONGODB_URI)
 
-// Routes
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+
 
 // Scrapes the webpage and stores the data in a document of the articles collection.
 app.get("/scrape", function(req, res) {
@@ -63,19 +68,19 @@ app.get("/scrape", function(req, res) {
             newResults.push(newArticle)
           }
         }
-    })
+      })
 
-        db.Article.create(newResults)
-        .then(function(x) {
-          // View the added result in the console
-          console.log(x)
-        })
-        .catch(function(err) {
-          return res.json(err)
-        })
+      db.Article.create(newResults)
+      .then(function(x) {
+        // View the added result in the console
+        console.log(x)
+      })
+      .catch(function(err) {
+        return res.json(err)
+      })
 
       // Informs client side of succesful scrape
-      res.send("Scrape Complete")
+      res.render("home", {data: data})
       })
 
   })
@@ -87,9 +92,10 @@ app.get("/articles", function(req, res) {
 
   // Grab every document in the Articles collection
   db.Article.find({saved: false})
-    .then(function(x) {
+    .then(function(data) {
       // Sends articles back to client
-      res.json(x)
+      
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -101,9 +107,9 @@ app.get("/savedarticles", function(req, res) {
   console.log("server side /articles hit")
   // Grab every document in the Articles collection
   db.Article.find({saved: true})
-    .then(function(x) {
+    .then(function(data) {
       // Sends articles back to client
-      res.json(x)
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -114,9 +120,9 @@ app.get("/savedarticles", function(req, res) {
 app.get("/loadedarticles", function(req, res) {
   // Grab every document in the Articles collection
   db.Article.find({saved: false})
-    .then(function(x) {
+    .then(function(data) {
       // If we were able to successfully find Articles, send them back to the client
-      res.json(x)
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -130,8 +136,8 @@ app.get("/articles/:id", function(req, res) {
   db.Article.findOne({ _id: req.params.id })
     // add the note(s) to it
     .populate("note")
-    .then(function(x) {
-      res.json(x)
+    .then(function(data) {
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -145,8 +151,8 @@ app.post("/articles/:id", function(req, res) {
     .then(function(dbNote) {
       return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true })
     })
-    .then(function(x) {
-      res.json(x)
+    .then(function(data) {
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -158,8 +164,8 @@ app.post("/articles/:id", function(req, res) {
 app.post("/save/:id", function(req, res) {
 
   db.Article.findOneAndUpdate({ _id: req.params.id }, {saved: req.body.saved}, { new: true })
-    .then(function(x) {
-      res.json(x)
+    .then(function(data) {
+      res.render('home', {data: data})
     })
     .catch(function(err) {
       res.json(err)
@@ -170,6 +176,3 @@ app.post("/save/:id", function(req, res) {
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!")
 })
-
-
-
